@@ -1,5 +1,13 @@
 const doHMR = (options) => {
   if (import.meta.hot) {
+    import.meta.hot.on('vite:beforeFullReload', (info) => {
+      const { triggeredBy: fileName } = info;
+
+      if (fileName.endsWith('.twig') && fileName.includes("templates")) {
+        throw new Error("Preventing full-reload due to HMR.");
+      }
+    });
+    
     import.meta.hot.on('drupal:update:twig', async (ctx) => {
       if (!ctx.file.includes('templates')) {
         throw new Error('All your twig templates needs to be located in a "templates" folder at the root of your component.');
