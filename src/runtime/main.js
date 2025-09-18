@@ -120,18 +120,17 @@ const findTemplateInHtml = (templateFileName, html) => {
   const beginOutput = getCommentContent(templateFileName, 'begin');
   const endOutput = getCommentContent(templateFileName, 'end');
   // Use matchAll because the template can be used multiple times in the same page.
-  const regexp = new RegExp(`${beginOutput}.*?${endOutput}`, 'gmsd');
+  const regexp = new RegExp(`${beginOutput}.*?${endOutput}`, 'gmsdu');
 
   return [...html.matchAll(regexp)];
 }
 
 const getCommentContent = (templateFileName, type) => {
-  if (type === 'begin') {
-    return `<!-- BEGIN OUTPUT from '${templateFileName}' -->`;
+  if (type === "begin") {
+    return `<!-- \u{1F4A1} BEGIN CUSTOM TEMPLATE OUTPUT from '${templateFileName}' -->`;
   }
-
-  if (type === 'end') {
-    return `<!-- END OUTPUT from '${templateFileName}' -->`;
+  if (type === "end") {
+    return `<!-- END CUSTOM TEMPLATE OUTPUT from '${templateFileName}' -->`;
   }
 }
 
