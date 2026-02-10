@@ -1,6 +1,6 @@
-# vite-plugin-drupal-template-hmr
+# vite-plugin-drupal-twig-hmr
 
-A Vite plugin that make Drupal template HMR happen 🪄.
+A Vite plugin that make Drupal Twig HMR happen for Single-Directory Components and Templates 🪄.
 
 ## Motivation
 
@@ -27,28 +27,28 @@ You can use modules like https://www.drupal.org/project/vite to help you do that
 3. Install it as you would install any `npm` package. Example:
 
 ```shell
-pnpm install vite-plugin-drupal-template-hmr -D
+npm i -D vite-plugin-drupal-twig-hmr
 ```
 
-4. Reference the plugin in `vite.config.ts` file.
+4. Reference the plugin in `vite.config.ts` file
 ```js
-import viteDrupalTemplateHMR from 'vite-plugin-drupal-template-hmr'
+import viteDrupalTwigHMR from 'vite-plugin-drupal-twig-hmr'
 
 // @see https://vitejs.dev/config/
 export default defineConfig({
   plugins: [
     // ...other plugins
-    viteDrupalTemplateHMR(/* options */),
+    viteDrupalTwigHMR(/* options */),
   ],
 })
 ```
 
-5. Add the virtual module to your backend.
+5. Add the virtual module to your backend
 
-Assuming your Vite dev server is `localhost:5147`:
+Assuming your Vite dev server is `localhost:5173`:
 
 ```html
-<script src="localhost:5147/@vite-plugin-drupal-template-hmr" type="module"></script>
+<script src="localhost:5173/@vite-plugin-drupal-template-hmr" type="module"></script>
 ```
 
 ## Options
@@ -77,7 +77,15 @@ The plugin will do a `fetch` on the current URL to catch the updated HTML of the
 do DOM manipulations when a `.twig` file is updated to replace DOM between comments added by the `twig debug mode` like so:
 
 ```html
-<!-- BEGIN OUTPUT from 'themes/custom/default/templates/field/field--node--title.html.twig' -->
-<span class="test">Page test</span> <!-- This will be replaced -->
-<!-- END OUTPUT from 'themes/custom/default/templates/field/field--node--title.html.twig' -->
+<!-- 💡 BEGIN CUSTOM TEMPLATE OUTPUT from 'themes/custom/default/templates/field/field--node--title.html.twig' -->
+<span class="test">Page test</span> <!-- <- This will be replaced -->
+<!-- END CUSTOM TEMPLATE OUTPUT from 'themes/custom/default/templates/field/field--node--title.html.twig' -->
+```
+
+For Single-Directory Components the commands look a bit different:
+
+```html
+<!-- 🥙 Component start: THEME:component-name -->
+<div>Content</div> <!-- <- This will be replaced -->
+<!-- 🥙 Component end: THEME:component-name -->
 ```

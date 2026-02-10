@@ -1,14 +1,14 @@
 {
-  "name": "vite-plugin-drupal-template-hmr",
-  "version": "1.0.3",
-  "description": "A Vite plugin that make Drupal template HMR happen.",
-  "author": "kokoal <open.kokoal@gmail.com>",
+  "name": "vite-plugin-drupal-twig-hmr",
+  "version": "1.0.0",
+  "description": "A Vite plugin that make Drupal Twig HMR happen.",
+  "author": "yannickoo <github@yannick.md>",
   "license": "MIT",
   "type": "module",
-  "homepage": "https://github.com/kokoal/vite-plugin-drupal-template-hmr",
+  "homepage": "https://github.com/yannickoo/vite-plugin-drupal-twig-hmr",
   "repository": {
     "type": "git",
-    "url": "https://github.com/kokoal/vite-plugin-drupal-template-hmr"
+    "url": "https://github.com/kokoal/vite-plugin-drupal-twig-hmr"
   },
   "keywords": [
     "vite-plugin",
@@ -29,5 +29,9 @@
   "scripts": {
     "build": "npx tsup src/index.js --format esm && npx tsup src/runtime/main.js --format esm -d dist/runtime",
     "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "devDependencies": {
+    "tsup": "^8.5.1",
+    "typescript": "^5.9.3"
   }
 }

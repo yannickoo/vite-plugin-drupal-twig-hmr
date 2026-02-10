@@ -2,8 +2,8 @@ import path from 'node:path'
 import { createRequire } from 'module'
 import fs from 'fs'
 
-const RUNTIME_CLIENT_RUNTIME_PATH = '/@vite-plugin-drupal-template-hmr-runtime'
-const RUNTIME_CLIENT_ENTRY_PATH = '/@vite-plugin-drupal-template-hmr';
+const RUNTIME_CLIENT_RUNTIME_PATH = '/@vite-plugin-drupal-twig-hmr-runtime'
+const RUNTIME_CLIENT_ENTRY_PATH = '/@vite-plugin-drupal-twig-hmr';
 
 const composePreambleCode = (base = '/', options) => `
 import {doHMR} from "${base}${RUNTIME_CLIENT_RUNTIME_PATH.slice(1)}";
@@ -16,12 +16,12 @@ const _require = createRequire(import.meta.url);
 const runtimeSourceFilePath = _require.resolve('./runtime/main.js');
 const runtimeCode = `${fs.readFileSync(runtimeSourceFilePath, 'utf-8')};`;
 
-export default async function viteDrupalTemplateHMR(options) {
+export default async function viteDrupalTwigHMR(options) {
 
   const templateBase = options.templateBase || '';
 
   return {
-    name: 'vite-plugin-drupal-template-hmr',
+    name: 'vite-plugin-drupal-twig-hmr',
     apply: 'serve',
     resolveId(id) {
       if (id === RUNTIME_CLIENT_RUNTIME_PATH || id === RUNTIME_CLIENT_ENTRY_PATH) {

@@ -1,8 +1,8 @@
 const doHMR = (options) => {
   if (import.meta.hot) {
     import.meta.hot.on('drupal:update:twig', async (ctx) => {
-      if (!ctx.file.includes('templates')) {
-        throw new Error('All your twig templates needs to be located in a "templates" folder at the root of your component.');
+      if (!ctx.file.includes('templates') && !ctx.file.includes('components')) {
+        throw new Error('All your twig templates needs to be located in a "templates" or "components" folder at the root of your component.');
       }
 
       const currentHtml = document.documentElement.innerHTML;
@@ -16,7 +16,7 @@ const doHMR = (options) => {
        * Drupal install into your Vite container, this will result in different root for updated files via HMR.
        */
       const templateBase = options.templateBase.endsWith('/') ? options.templateBase.slice(0, -1) : options.templateBase;
-      const templateName = ctx.file.match(new RegExp(`templates\/.*`))[0];
+      const templateName = ctx.file.match(/(templates|components)\/.*/)[0];
       const resolvedTemplateName = `${templateBase}/${templateName}`;
 
       const url = new URL(window.location.href);
@@ -125,14 +125,76 @@ const findTemplateInHtml = (templateFileName, html) => {
   return [...html.matchAll(regexp)];
 }
 
-const getCommentContent = (templateFileName, type) => {
-  if (type === 'begin') {
-    return `<!-- BEGIN OUTPUT from '${templateFileName}' -->`;
+/**
+ * This function generates an emoji based on the input string.
+ *
+ * Based on Drupal's emojiForString function: https://git.drupalcode.org/project/drupal/-/blob/11.x/core/lib/Drupal/Core/Template/ComponentNodeVisitor.php#L188-216
+ */
+const getEmojiForString = (input) => {
+  const MAX_LENGTH = 40;
+  const EMOJI_START = 129338;
+  const EMOJI_END = 129431;
+  const RANGE = EMOJI_END - EMOJI_START;
+
+  // Step 1–3: normalize string
+  input = input.toLowerCase().replace(/[-_:]/g, '0').substring(0, MAX_LENGTH);
+
+  // Step 4–5: split + pad to 20
+  const chars = input.split('');
+  while (chars.length < 20) chars.push('0');
+
+  // Step 6: sum char codes
+  let sum = 0;
+  for (const c of chars) sum += c.charCodeAt(0);
+
+  // Step 7–10: scale exactly like PHP
+  const fraction = sum / 4880;
+  const codePoint = Math.floor(EMOJI_START + fraction * RANGE);
+
+  return String.fromCodePoint(codePoint);
+}
+
+const getThemeName = (templateFileName) => {
+  const parts = templateFileName.split('/');
+  const compIndex = parts.indexOf('components');
+  if (compIndex > 0) {
+    return parts[compIndex - 1];
   }
 
-  if (type === 'end') {
-    return `<!-- END OUTPUT from '${templateFileName}' -->`;
+  return '';
+}
+
+const getCommentContent = (templateFileName, type) => {
+  const isTemplate = templateFileName.includes('/templates/');
+  const isComponent = !isTemplate && templateFileName.includes('/components/');
+
+  if (isComponent) {
+    const themeName = getThemeName(templateFileName);
+    // extract "button-link" from ".../button-link.twig"
+    const fileName = templateFileName
+      .split("/")
+      .pop()
+      .replace(/\.twig$/, '');
+    const emoji = getEmojiForString(`${themeName}:${fileName}`);
+
+    if (type === 'begin') {
+      return `<!-- ${emoji} Component start: ${themeName}:${fileName} -->`;
+    }
+    if (type === 'end') {
+      return `<!-- ${emoji} Component end: ${themeName}:${fileName} -->`;
+    }
   }
+
+  if (isTemplate) {
+    if (type === 'begin') {
+      return `<!-- 💡 BEGIN CUSTOM TEMPLATE OUTPUT from '${templateFileName}' -->`;
+    }
+    if (type === 'end') {
+      return `<!-- END CUSTOM TEMPLATE OUTPUT from '${templateFileName}' -->`;
+    }
+  }
+
+  return '';
 }
 
 const transformTextIntoComment = (text) => {
