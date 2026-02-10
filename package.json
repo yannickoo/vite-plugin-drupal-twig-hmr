@@ -1,6 +1,6 @@
 {
   "name": "vite-plugin-drupal-twig-hmr",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "A Vite plugin that make Drupal Twig HMR happen.",
   "author": "yannickoo <github@yannick.md>",
   "license": "MIT",
