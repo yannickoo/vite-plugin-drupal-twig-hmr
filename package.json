@@ -8,7 +8,7 @@
   "homepage": "https://github.com/yannickoo/vite-plugin-drupal-twig-hmr",
   "repository": {
     "type": "git",
-    "url": "https://github.com/kokoal/vite-plugin-drupal-twig-hmr"
+    "url": "https://github.com/yannickoo/vite-plugin-drupal-twig-hmr"
   },
   "keywords": [
     "vite-plugin",
