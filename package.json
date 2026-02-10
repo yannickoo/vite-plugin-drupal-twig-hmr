@@ -19,7 +19,7 @@
     "dist"
   ],
   "scripts": {
-    "build": "npx tsdown",
+    "build": "tsdown",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "devDependencies": {
