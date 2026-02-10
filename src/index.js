@@ -13,8 +13,18 @@ doHMR({
 `
 
 const _require = createRequire(import.meta.url);
-const runtimeSourceFilePath = _require.resolve('./runtime/main.js');
-const runtimeCode = `${fs.readFileSync(runtimeSourceFilePath, 'utf-8')};`;
+
+let runtimeSourceFilePath;
+
+try {
+  // Prefer ESM if running in ESM
+  runtimeSourceFilePath = _require.resolve('./runtime/main.mjs');
+} catch {
+  // Fallback to CJS
+  runtimeSourceFilePath = _require.resolve('./runtime/main.cjs');
+}
+
+const runtimeCode = fs.readFileSync(runtimeSourceFilePath, 'utf-8');
 
 export default async function viteDrupalTwigHMR(options) {
 

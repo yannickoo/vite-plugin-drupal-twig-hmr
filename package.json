@@ -15,23 +15,28 @@
     "drupal",
     "hmr"
   ],
-  "exports": {
-    ".": {
-      "import": "./dist/index.mjs",
-      "require": "./dist/index.js"
-    }
-  },
   "files": [
     "dist"
   ],
-  "main": "dist/index.js",
-  "module": "dist/index.mjs",
   "scripts": {
-    "build": "npx tsup src/index.js --format esm && npx tsup src/runtime/main.js --format esm -d dist/runtime",
+    "build": "npx tsdown",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "devDependencies": {
-    "tsup": "^8.5.1",
+    "tsdown": "^0.20.3",
     "typescript": "^5.9.3"
-  }
+  },
+  "exports": {
+    ".": {
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.cjs"
+    },
+    "./runtime/main": {
+      "import": "./dist/runtime/main.mjs",
+      "require": "./dist/runtime/main.cjs"
+    },
+    "./package.json": "./package.json"
+  },
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.mjs"
 }
