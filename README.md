@@ -48,7 +48,30 @@ export default defineConfig({
 Assuming your Vite dev server is `localhost:5173`:
 
 ```html
-<script src="localhost:5173/@vite-plugin-drupal-template-hmr" type="module"></script>
+<script src="http://localhost:5173/@vite-plugin-drupal-template-hmr" type="module"></script>
+```
+
+The easiest way to add that in a dynamic way is to implement `hook_library_info_alter` in your theme which is automatically reading the dev server URL from your `settings.local.php`:
+
+```php
+/**
+ * Implements hook_library_info_alter().
+ */
+function THEME_library_info_alter(&$libraries, $extension) {
+  // Add <script> tag for vite-plugin-drupal-twig-hmr plugin.
+  if ($extension == 'vite') {
+    $vite_settings = Settings::get('vite');
+    if (!empty($vite_settings['devServerUrl'])) {
+      $vite_plugin_url = $vite_settings['devServerUrl'] . '/@vite-plugin-drupal-twig-hmr';
+      $libraries['vite-dev-client']['js'][$vite_plugin_url] = [
+        'attributes' => [
+          'type' => 'module',
+        ],
+        'external' => TRUE,
+      ];
+    }
+  }
+}
 ```
 
 ## Options
